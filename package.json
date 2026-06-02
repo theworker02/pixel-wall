@@ -7,6 +7,7 @@
     "dev:backend": "npm run dev -w backend",
     "dev:frontend": "npm run dev -w frontend",
     "build": "npm run build -w backend && npm run build -w frontend",
+    "build:vercel": "npm run build -w frontend",
     "seed": "npm run seed -w backend",
     "setup:moderation": "node scripts/setup-moderation-env.mjs",
     "dev:moderation": "node scripts/moderation-webhook.mjs"
