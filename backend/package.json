@@ -2,6 +2,9 @@
   "name": "pixel-wall-backend",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.13.0 <23"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
