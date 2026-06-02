@@ -31,7 +31,7 @@ A free, real-time collaborative pixel canvas. Visitors can explore the wall, whi
 - Node.js, Express, TypeScript, Socket.io
 - SQLite through Node's built-in `node:sqlite` module
 - bcrypt password hashing and hashed bearer session tokens
-- Vercel Analytics page-view tracking
+- Vercel Analytics page-view tracking and Speed Insights performance metrics
 
 ## Production deployment
 
