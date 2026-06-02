@@ -37,17 +37,17 @@ A free, real-time collaborative pixel canvas. Visitors can explore the wall, whi
 
 The frontend and API are separate deployments. Vercel hosts the Vite frontend; Railway hosts the Express, Socket.io, and SQLite backend.
 
-This repository includes `vercel.json`. In the Vercel project settings, set **Root Directory** to the repository root (`.`), not `frontend`. The checked-in config installs workspace dependencies, runs `npm run build:vercel`, publishes `frontend/dist`, and rewrites client-side React Router URLs to `index.html`.
+This repository includes Vercel configs for both supported project-root modes. Your existing Vercel project can keep **Root Directory** set to `frontend`; the frontend-local config installs dependencies, runs `npm run build:vercel`, publishes `dist`, and rewrites client-side React Router URLs to `index.html`. A root-level config is also available if you later switch **Root Directory** to the repository root (`.`).
 
 If Vercel has dashboard overrides enabled, use these exact values:
 
 ```text
 Install Command: npm install
 Build Command: npm run build:vercel
-Output Directory: frontend/dist
+Output Directory: dist
 ```
 
-Do not use `npm run build backend && npm run build frontend`. Those trailing words become arguments to Vite, causing it to search for `backend/index.html` or `frontend/index.html`.
+These values assume **Root Directory** is `frontend`. Do not use `npm run build backend && npm run build frontend`. Those trailing words become arguments to Vite, causing it to search for `backend/index.html` or `frontend/index.html`.
 
 In Vercel, add these frontend environment variables and redeploy:
 

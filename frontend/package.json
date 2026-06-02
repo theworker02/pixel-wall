@@ -6,6 +6,7 @@
     "dev": "node ../scripts/dev.mjs",
     "dev:vite": "vite",
     "build": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit && vite build",
+    "build:vercel": "npm run build",
     "preview": "vite preview"
   },
   "dependencies": {
