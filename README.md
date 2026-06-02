@@ -1,6 +1,29 @@
 # The Free Pixel Wall
 
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-5-111111?logo=express&logoColor=white)](https://expressjs.com/)
+[![Socket.io](https://img.shields.io/badge/Socket.io-Realtime-010101?logo=socketdotio&logoColor=white)](https://socket.io/)
+[![Vercel](https://img.shields.io/badge/Live_on_Vercel-Visit_Site-000000?logo=vercel&logoColor=white)](https://pixel-wall-frontend.vercel.app/)
+
 A free, real-time collaborative pixel canvas. Visitors can explore the wall, while registered users can draw, keep contribution credit, view profiles, and climb the leaderboards. Pixel history is append-only: overdraw changes the visible wall without erasing its story.
+
+**Live website:** [https://pixel-wall-frontend.vercel.app/](https://pixel-wall-frontend.vercel.app/)
+
+## UI Screenshots
+
+### Live canvas
+
+![The Free Pixel Wall live collaborative canvas](docs/screenshots/live-canvas.png)
+
+### Leaderboard
+
+![The Free Pixel Wall contribution leaderboard](docs/screenshots/leaderboard.png)
+
+### Moderation appeal
+
+![The Free Pixel Wall moderation appeal form](docs/screenshots/moderation-appeal.png)
 
 ## Stack
 
@@ -8,6 +31,7 @@ A free, real-time collaborative pixel canvas. Visitors can explore the wall, whi
 - Node.js, Express, TypeScript, Socket.io
 - SQLite through Node's built-in `node:sqlite` module
 - bcrypt password hashing and hashed bearer session tokens
+- Vercel Analytics page-view tracking
 
 
 ## Features
@@ -114,4 +138,3 @@ POST /api/moderation/appeals/:id/deny
 ## Moving toward PostgreSQL
 
 The schema uses conventional relational tables and the client only talks to HTTP APIs. To migrate, replace the small synchronous SQLite access layer in `backend/src/db.ts` and the SQL calls in `backend/src/index.ts` with a PostgreSQL adapter or query builder. The API contract and frontend do not need to change.
-
