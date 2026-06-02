@@ -16,6 +16,7 @@ const server = createServer(app);
 const clientUrls = [...new Set([
         "http://localhost:5173",
         "https://pixel-wall-frontend.vercel.app",
+        "https://pixel-wall-site.vercel.app",
         ...(process.env.CLIENT_URL ?? "").split(",").map((url) => url.trim()).filter(Boolean)
     ])];
 const allowedOrigin = (origin, callback) => {
