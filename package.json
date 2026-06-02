@@ -1,0 +1,14 @@
+{
+  "name": "the-free-pixel-wall",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "seed": "npm run seed -w backend",
+    "setup:moderation": "node scripts/setup-moderation-env.mjs",
+    "dev:moderation": "node scripts/moderation-webhook.mjs"
+  }
+}
