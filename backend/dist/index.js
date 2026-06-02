@@ -13,7 +13,11 @@ import { banUser, blacklisted, fingerprint, moderationEventPlot, moderationSumma
 import { rateLimit } from "./security.js";
 const app = express();
 const server = createServer(app);
-const clientUrls = (process.env.CLIENT_URL ?? "http://localhost:5173").split(",").map((url) => url.trim()).filter(Boolean);
+const clientUrls = [...new Set([
+        "http://localhost:5173",
+        "https://pixel-wall-frontend.vercel.app",
+        ...(process.env.CLIENT_URL ?? "").split(",").map((url) => url.trim()).filter(Boolean)
+    ])];
 const allowedOrigin = (origin, callback) => {
     if (!origin || clientUrls.includes(origin))
         return callback(null, true);
