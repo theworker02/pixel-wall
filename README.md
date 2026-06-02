@@ -33,6 +33,41 @@ A free, real-time collaborative pixel canvas. Visitors can explore the wall, whi
 - bcrypt password hashing and hashed bearer session tokens
 - Vercel Analytics page-view tracking
 
+## Production deployment
+
+The frontend and API are separate deployments. Vercel hosts the Vite frontend; Railway hosts the Express, Socket.io, and SQLite backend.
+
+In Vercel, add these frontend environment variables and redeploy:
+
+```text
+VITE_API_URL=https://your-railway-public-domain
+VITE_SOCKET_URL=https://your-railway-public-domain
+```
+
+The `VITE_` prefix is required: Vite exposes only prefixed variables to browser code. Do not add `/api` to the URL. Environment-variable changes take effect only after a new Vercel deployment.
+
+In Railway, set:
+
+```text
+CLIENT_URL=http://localhost:5173,https://pixel-wall-frontend.vercel.app
+DATABASE_PATH=/data/pixel-wall.db
+TRUST_PROXY=true
+```
+
+Attach a persistent Railway volume at `/data` so accounts and artwork survive restarts. Keep the moderation and Gemini secrets configured in Railway rather than committing `backend/.env`.
+
+After deploying Railway, verify:
+
+```text
+https://your-railway-public-domain/api/health
+```
+
+It should return:
+
+```json
+{ "ok": true, "service": "pixel-wall-api" }
+```
+
 
 ## Features
 

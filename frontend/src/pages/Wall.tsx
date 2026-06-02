@@ -4,6 +4,7 @@ import { Camera, Clipboard, Crosshair, Eraser, Flame, Grid3X3, Hand, History, Lo
 import { Link } from "react-router-dom";
 import { useCanvasViewport } from "../hooks/useCanvasViewport";
 import { api, useAuth } from "../state";
+import { socketOrigin } from "../config";
 
 type Pixel = { x: number; y: number; color: string | null; createdAt?: string };
 type HeatCell = { x: number; y: number; count: number };
@@ -124,7 +125,7 @@ export function Wall() {
       pixels.current = new Map(data.pixels.map((p) => [`${p.x}:${p.y}`, p])); setRecent(data.recent); paint();
     });
     api<{ colors: Array<{ color: string; count: number }> }>("/api/stats/colors").then((r) => setStats(r.colors));
-    const socket = io();
+    const socket = io(socketOrigin || undefined);
     socket.on("pixels:placed", (batch: Pixel[]) => {
       batch.forEach((p) => p.color ? pixels.current.set(`${p.x}:${p.y}`, p) : pixels.current.delete(`${p.x}:${p.y}`));
       const painted = batch.filter((p) => p.color);

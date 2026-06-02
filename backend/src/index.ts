@@ -14,8 +14,12 @@ import { rateLimit } from "./security.js";
 
 const app = express();
 const server = createServer(app);
-const clientUrl = process.env.CLIENT_URL ?? "http://localhost:5173";
-const io = new Server(server, { cors: { origin: clientUrl } });
+const clientUrls = (process.env.CLIENT_URL ?? "http://localhost:5173").split(",").map((url) => url.trim()).filter(Boolean);
+const allowedOrigin = (origin: string | undefined, callback: (error: Error | null, allowed?: boolean) => void) => {
+  if (!origin || clientUrls.includes(origin)) return callback(null, true);
+  callback(Object.assign(new Error("Origin is not allowed."), { status: 403 }));
+};
+const io = new Server(server, { cors: { origin: allowedOrigin } });
 const CANVAS_SIZE = 8192;
 const ENTRY_SIZE = 32;
 const COOLDOWN_MS = 650;
@@ -31,7 +35,7 @@ const isAppealRequest = (req: express.Request) => req.path === "/api/appeals" ||
 if (process.env.TRUST_PROXY === "true") app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
-app.use(cors({ origin: clientUrl, methods: ["GET", "POST"], allowedHeaders: ["Content-Type", "Authorization", "X-Appeal-Receipt"] }));
+app.use(cors({ origin: allowedOrigin, methods: ["GET", "POST"], allowedHeaders: ["Content-Type", "Authorization", "X-Appeal-Receipt"] }));
 app.use(express.json({ limit: "100kb" }));
 app.use((req, res, next) => {
   if (networkBanned(req) && !isModeratorRequest(req) && !isAppealRequest(req)) return res.status(403).json({ error: "Access denied." });
@@ -50,6 +54,7 @@ const publicEntry = (entry?: CanvasEntry) => entry ? { originX: entry.origin_x, 
 const withinEntry = (point: { x: number; y: number }, entry: CanvasEntry) =>
   point.x >= entry.origin_x && point.x < entry.origin_x + entry.size && point.y >= entry.origin_y && point.y < entry.origin_y + entry.size;
 
+app.get("/api/health", (_req, res) => res.json({ ok: true, service: "pixel-wall-api" }));
 app.post("/api/auth/register", authLimit, async (req, res) => {
   const body = req.body && typeof req.body === "object" ? req.body : {};
   const username = String(body.username ?? "").trim();
@@ -303,7 +308,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   const error = err as { message?: string; status?: number };
   const status = Number(error.status);
   console.error(`[api-error] ${Number.isFinite(status) ? status : 500} ${error.message ?? "Unknown server error"}`);
-  if (status === 400 || status === 413) return res.status(status).json({ error: status === 413 ? "Request body is too large." : "Malformed JSON request body." });
+  if (status === 400 || status === 403 || status === 413) return res.status(status).json({ error: status === 413 ? "Request body is too large." : status === 403 ? "Origin is not allowed." : "Malformed JSON request body." });
   res.status(500).json({ error: "The wall hit an unexpected error." });
 });
 io.use((socket, next) => {
